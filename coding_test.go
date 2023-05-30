@@ -14,10 +14,8 @@ import (
 )
 
 func TestDataStore(t *testing.T) {
-	s, err := launchServer()
-	if err != nil {
-		t.Fatalf("error: %s", err)
-	}
+	s := launchServer(t)
+
 	t.Cleanup(func() {
 		_ = s.Shutdown()
 	})
@@ -112,20 +110,21 @@ func (s *testServer) Shutdown() error {
 	}
 	return nil
 }
+
 // closes an io.Closer and ignores the returned error
 func closeIgnore(closer io.Closer) {
 	_ = closer.Close()
 }
-func launchServer() (*testServer, error) {
-	cmd := exec.Command("./testapp")
+func launchServer(t *testing.T) *testServer {
+	cmd := exec.Command("go", "run", ".")
 	err := cmd.Start()
 	if err != nil {
-		return nil, err
+		t.Fatal("unable to start server", err)
 	}
 
 	time.Sleep(time.Millisecond * 400) // Wait until we boot up
 
-	return &testServer{cmd: cmd}, nil
+	return &testServer{cmd: cmd}
 }
 
 func getBlob(t *testing.T, oid string) (string, int) {
