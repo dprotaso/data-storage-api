@@ -69,7 +69,6 @@ Status: 200 OK
 In `testapp.go` you'll find a naive first draft of the answer to the exercise written for you. Please improve this draft so that it passes the test written in `coding_test.go`. You can test this by running:
 
 ```
-go build -o testapp
 go test -count=1
 ```
 
